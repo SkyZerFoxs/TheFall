@@ -3,6 +3,14 @@
 
 #include "Components/StatlineComponent.h"
 
+void UStatlineComponent::TickStats(const float& DeltaTime)
+{
+	Health.TickStat(DeltaTime);
+	Stamina.TickStat(DeltaTime);
+	Hunger.TickStat(DeltaTime);
+	Thirst.TickStat(DeltaTime);
+}
+
 // Sets default values for this component's properties
 UStatlineComponent::UStatlineComponent()
 {
@@ -28,7 +36,29 @@ void UStatlineComponent::BeginPlay()
 void UStatlineComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if (TickType != ELevelTick::LEVELTICK_PauseTick)
+	{
+		TickStats(DeltaTime);
+	}
+	
+}
 
-	// ...
+float UStatlineComponent::GetStatPercentile(const ECoreStat Stat) const
+{
+	switch (Stat)
+	{
+	case ECoreStat::CS_HEALTH:
+		return Health.Percentile();
+	case ECoreStat::CS_HUNGER:
+		return Hunger.Percentile();
+	case ECoreStat::CS_STAMINA:
+		return Stamina.Percentile();
+	case ECoreStat::CS_THIRST:
+		return Thirst.Percentile();
+	default:
+		//Log invalid stat
+		break;
+	}
+	return -1;
 }
 

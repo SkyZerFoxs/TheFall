@@ -2,12 +2,14 @@
 
 
 #include "BaseClass/TFCharacter.h"
-
+#include "Components/StatlineComponent.h"
 // Sets default values
 ATFCharacter::ATFCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	Statline = CreateDefaultSubobject<UStatlineComponent>(TEXT("StatLine"));
 
 }
 

@@ -6,6 +6,15 @@
 #include "Components/ActorComponent.h"
 #include "StatlineComponent.generated.h"
 
+UENUM(BlueprintType)
+enum class ECoreStat : uint8
+{
+	CS_HEALTH UMETA(DisplayName = "Health"),
+	CS_STAMINA UMETA(DisplayName = "Stamina"),
+	CS_HUNGER UMETA(DisplayName = "Hunger"),
+	CS_THIRST UMETA(DisplayName = "Thirst")
+};
+
 USTRUCT(BlueprintType)
 struct FCoreStat
 {
@@ -15,12 +24,23 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		float Current = 100;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	float Max = 100;
+		float Max = 100;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 		float PerSecondTick = 1;
 
 public:
 	
+	FCoreStat()
+	{
+
+	}
+	FCoreStat(const float& current, const float& max, const float& tick)
+	{
+		Current = current;
+		Max = max;
+		PerSecondTick = tick;
+	}
+
 	void TickStat(const float& DeltaTime)
 	{
 		Current = FMath::Clamp(Current + (PerSecondTick * DeltaTime), 0, Max);
@@ -37,7 +57,10 @@ public:
 	}
 
 
-
+	void AdjustTick(const float& NewTick)
+	{
+		PerSecondTick = NewTick;
+	}
 
 };
 
@@ -66,9 +89,11 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FCoreStat Stamina;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FCoreStat Hunger;
+	FCoreStat Hunger = FCoreStat(100, 100, -0.125);
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	FCoreStat Thirst;
+	FCoreStat Thirst = FCoreStat(100,100,-0.25);
+
+	void TickStats(const float& DeltaTime);
 
 public:	
 	// Sets default values for this component's properties
@@ -82,5 +107,9 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	UFUNCTION(BlueprintCallable)
+	float GetStatPercentile(const ECoreStat Stat) const;
+
+
+
 };
