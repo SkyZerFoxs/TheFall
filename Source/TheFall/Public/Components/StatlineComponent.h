@@ -62,6 +62,10 @@ public:
 		PerSecondTick = NewTick;
 	}
 
+	float GetCurrent() const
+	{
+		return Current;
+	}
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -84,32 +88,66 @@ class THEFALL_API UStatlineComponent : public UActorComponent
 
 private:
 
+	class UCharacterMovementComponent* OwningCharMovementComp;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FCoreStat Health;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FCoreStat Stamina;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FCoreStat Hunger = FCoreStat(100, 100, -0.125);
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	FCoreStat Thirst = FCoreStat(100,100,-0.25);
 
-	void TickStats(const float& DeltaTime);
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	bool bIsSprinting = false;
 
-public:	
-	// Sets default values for this component's properties
-	UStatlineComponent();
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float SprintCostMultiplier = 2;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float WalkSpeed = 125;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float SprintSpeed = 450;
+	
+	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float JumpCost = 10;
+
+
+
+
+	void TickStats(const float& DeltaTime);
+	void TickStamina(const float& DeltaTime);
+	bool IsValidSprinting();
 
 protected:
-	// Called when the game starts
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
+
+	UStatlineComponent();
+
+
+
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	UFUNCTION(BlueprintCallable)
+	void SetMovementCompReference(UCharacterMovementComponent* Comp);
 
 	UFUNCTION(BlueprintCallable)
 	float GetStatPercentile(const ECoreStat Stat) const;
 
-
-
+	UFUNCTION(BlueprintCallable)
+	bool CanSprint()const;
+	UFUNCTION(BlueprintCallable)
+	void SetSprinting(const bool& IsSprinting);
+	UFUNCTION(BlueprintCallable)
+	bool CanJump();
+	UFUNCTION(BlueprintCallable)
+	void HasJumped();
 };

@@ -22,6 +22,8 @@ class THEFALL_API ATFPlayerCharacter : public ATFCharacter
 	GENERATED_BODY()
 
 private:
+
+
 	/** Camera boom positioning the camera behind the character */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	USpringArmComponent* CameraBoom;
@@ -30,6 +32,7 @@ private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
 
+#pragma region Input
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputMappingContext* DefaultMappingContext;
@@ -46,6 +49,11 @@ private:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* SprintAction;
+
+#pragma endregion
+
 public:
 	ATFPlayerCharacter();
 	
@@ -56,6 +64,11 @@ protected:
 
 	/** Called for looking input */
 	void Look(const FInputActionValue& Value);
+
+	void PlayerJump();
+
+	void SprintOn();
+	void SprintOff();
 
 	virtual void NotifyControllerChanged() override;
 

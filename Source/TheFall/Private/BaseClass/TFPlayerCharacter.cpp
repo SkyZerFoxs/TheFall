@@ -81,6 +81,25 @@ void ATFPlayerCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
+
+void ATFPlayerCharacter::PlayerJump()
+{
+	if (ATFCharacter::CanJump())
+	{
+		ATFCharacter::HasJumped();
+	}
+}
+
+void ATFPlayerCharacter::SprintOn()
+{
+	SetSprinting(true);
+}
+
+void ATFPlayerCharacter::SprintOff()
+{
+	SetSprinting(false);
+}
+
 void ATFPlayerCharacter::NotifyControllerChanged()
 {
 
@@ -99,13 +118,19 @@ void ATFPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
 
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
+		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ATFPlayerCharacter::PlayerJump);
+		
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 		
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &ATFPlayerCharacter::Move);
 
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ATFPlayerCharacter::Look);
+	
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ATFPlayerCharacter::SprintOn);
+
+		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ATFPlayerCharacter::SprintOff);
 	}
+
 
 }
 

@@ -3,6 +3,8 @@
 
 #include "BaseClass/TFCharacter.h"
 #include "Components/StatlineComponent.h"
+//#include "TFPlayerCharacter.h"
+#include "BaseClass/TFPlayerCharacter.h"
 // Sets default values
 ATFCharacter::ATFCharacter()
 {
@@ -10,6 +12,8 @@ ATFCharacter::ATFCharacter()
 	PrimaryActorTick.bCanEverTick = true;
 
 	Statline = CreateDefaultSubobject<UStatlineComponent>(TEXT("StatLine"));
+	Statline->SetMovementCompReference(GetCharacterMovement());
+
 
 }
 
@@ -34,3 +38,23 @@ void ATFCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 
 }
 
+void ATFCharacter::HasJumped()
+{
+	Statline->HasJumped();
+	ACharacter::Jump();
+}
+
+
+bool ATFCharacter::CanJump() const
+{
+	return Statline->CanJump();
+}
+
+void ATFCharacter::SetSprinting(const bool& IsSprinting)
+{
+	Statline->SetSprinting(IsSprinting);
+}
+bool ATFCharacter::CanSprint() const
+{
+	return Statline->CanSprint();
+}
