@@ -95,6 +95,18 @@ void ATFPlayerCharacter::SprintOn()
 	SetSprinting(true);
 }
 
+void ATFPlayerCharacter::SneakOn()
+{
+	SetSneaking(true);
+}
+
+void ATFPlayerCharacter::SneakOff()
+{
+	SetSneaking(false);
+}
+
+
+
 void ATFPlayerCharacter::SprintOff()
 {
 	SetSprinting(false);
@@ -129,6 +141,10 @@ void ATFPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Started, this, &ATFPlayerCharacter::SprintOn);
 
 		EnhancedInputComponent->BindAction(SprintAction, ETriggerEvent::Completed, this, &ATFPlayerCharacter::SprintOff);
+	
+		EnhancedInputComponent->BindAction(SneakAction, ETriggerEvent::Started, this, &ATFPlayerCharacter::SneakOn);
+
+		EnhancedInputComponent->BindAction(SneakAction, ETriggerEvent::Completed, this, &ATFPlayerCharacter::SneakOff);
 	}
 
 

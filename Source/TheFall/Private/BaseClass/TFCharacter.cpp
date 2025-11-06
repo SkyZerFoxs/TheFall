@@ -58,3 +58,9 @@ bool ATFCharacter::CanSprint() const
 {
 	return Statline->CanSprint();
 }
+
+
+void ATFCharacter::SetSneaking(const bool& IsSneaking)
+{
+	Statline->SetSneaking(IsSneaking);
+}

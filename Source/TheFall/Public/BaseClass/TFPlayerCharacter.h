@@ -51,6 +51,10 @@ private:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* SprintAction;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* SneakAction;
+
 
 #pragma endregion
 
@@ -66,9 +70,10 @@ protected:
 	void Look(const FInputActionValue& Value);
 
 	void PlayerJump();
-
 	void SprintOn();
 	void SprintOff();
+	void SneakOn();
+	void SneakOff();
 
 	virtual void NotifyControllerChanged() override;
 
