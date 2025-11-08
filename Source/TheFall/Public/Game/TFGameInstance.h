@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Interface/SaveActorInterface.h"
 #include "TFGameInstance.generated.h"
 
 /**
@@ -13,5 +14,27 @@ UCLASS()
 class THEFALL_API UTFGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
-	
+
+private:
+
+	TMap<FGuid, FSaveActorData> SaveableActorData;
+	UPROPERTY()
+	class UTFSaveGame* SaveGameObject = nullptr;
+	FString SaveGameName = TEXT("DEFAULT");
+	FName CurrentlyLoadedLevel = "NONE";
+
+
+	UTFGameInstance();
+
+	void CreateSaveSlot();
+	void GatherActorData();
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	void AddActorData(const FGuid& ActorID, FSaveActorData ActorData);
+	FSaveActorData GetActorData(FGuid& ActorID);
+
+
+
 };

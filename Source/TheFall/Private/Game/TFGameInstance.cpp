@@ -2,4 +2,46 @@
 
 
 #include "Game/TFGameInstance.h"
+#include "Game/TFSaveGame.h"
+#include "Kismet/GameplayStatics.h"
+#include "EngineUtils.h"
 
+UTFGameInstance::UTFGameInstance()
+{
+
+}
+
+void UTFGameInstance::CreateSaveSlot()
+{
+	SaveGameObject = Cast<UTFSaveGame>(UGameplayStatics::CreateSaveGameObject(UTFSaveGame::StaticClass()));
+}
+
+void UTFGameInstance::GatherActorData()
+{
+	for (FActorIterator It(GetWorld()); It; ++It)
+	{
+		AActor* Actor = *It;
+		if (!IsValid(Actor) || !Actor->Implements<USaveActorInterface>())
+		{
+			continue;
+		}
+		ISaveActorInterface* Inter = Cast<ISaveActorInterface>(Actor);
+		if (Inter == nullptr)
+		{
+			continue;
+		}
+		//FGuid ActID = Inter->GetActorID();
+		//FSaveActorData = Inter->GetSaveData();
+	}
+
+}
+
+void UTFGameInstance::AddActorData(const FGuid& ActorID, FSaveActorData ActorData)
+{
+	SaveableActorData[ActorID] = ActorData;
+}
+
+FSaveActorData UTFGameInstance::GetActorData(FGuid& ActorID)
+{
+	return SaveableActorData[ActorID];
+}
