@@ -4,7 +4,6 @@
 #include "BaseClass/TFCharacter.h"
 #include "Components/StatlineComponent.h"
 //#include "TFPlayerCharacter.h"
-#include "BaseClass/TFPlayerCharacter.h"
 // Sets default values
 ATFCharacter::ATFCharacter()
 {
@@ -14,6 +13,7 @@ ATFCharacter::ATFCharacter()
 	Statline = CreateDefaultSubobject<UStatlineComponent>(TEXT("StatLine"));
 	Statline->SetMovementCompReference(GetCharacterMovement());
 
+	SaveActorID = FGuid::NewGuid();
 
 }
 
@@ -22,6 +22,11 @@ void ATFCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (!SaveActorID.IsValid())
+	{
+		SaveActorID = FGuid::NewGuid();
+	}
+
 }
 
 // Called every frame
@@ -63,4 +68,20 @@ bool ATFCharacter::CanSprint() const
 void ATFCharacter::SetSneaking(const bool& IsSneaking)
 {
 	Statline->SetSneaking(IsSneaking);
+}
+
+FGuid ATFCharacter::GetActorSaveID_Implementation()
+{
+	return SaveActorID;
+}
+
+FSaveActorData ATFCharacter::GetSaveData_Implementation()
+{
+	FSaveActorData Ret;
+	
+	Ret.ActorClass = this->GetClass();
+	Ret.ActorTransform = this->GetTransform();
+	Ret.WasSpawned = this->WasSpawned;
+
+	return Ret;
 }

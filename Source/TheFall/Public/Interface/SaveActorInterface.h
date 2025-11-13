@@ -19,10 +19,6 @@ public:
 	bool WasSpawned = false;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UClass* ActorClass;
-
-
-
-
 };
 
 
@@ -46,4 +42,12 @@ class THEFALL_API ISaveActorInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+
+	UFUNCTION(BlueprintNativeEvent)
+	FGuid GetActorSaveID();
+	virtual FGuid GetActorSaveID_Implementation();
+	UFUNCTION(BlueprintNativeEvent)
+	FSaveActorData GetSaveData();
+	virtual FSaveActorData GetSaveData_Implementation();
+
 };
