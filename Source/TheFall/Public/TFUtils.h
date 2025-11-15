@@ -4,12 +4,4 @@
 
 #include "CoreMinimal.h"
 
-/**
- * 
- */
-class THEFALL_API TFUtils
-{
-public:
-	TFUtils();
-	~TFUtils();
-};
+TArray<FString> ChopString(FString Source, char split = '|');
