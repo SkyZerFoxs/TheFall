@@ -154,5 +154,7 @@ void ATFPlayerCharacter::BeginPlay()
 {
 
 	Super::BeginPlay();
+	//ATFCharacter::BeginPlay();
+	SaveActorID.Invalidate();
 	
 }

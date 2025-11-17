@@ -15,16 +15,16 @@ class THEFALL_API ATFCharacter : public ACharacter, public ISaveActorInterface
 private:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, SaveGame, meta=(AllowPrivateAccess = "true"))
 	class UStatlineComponent* Statline;
+
+protected:
+	
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, SaveGame, meta = (AllowPrivateAccess = "true"))
 	FGuid SaveActorID;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, SaveGame, meta = (AllowPrivateAccess = "true"))
 	bool WasSpawned = false;
 
-public:
-	// Sets default values for this character's properties
-	ATFCharacter();
-
-protected:
+	
+	
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -37,6 +37,9 @@ protected:
 	void SetSneaking(const bool& IsSneaking);
 
 public:	
+
+	ATFCharacter();
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -45,6 +48,7 @@ public:
 
 	FGuid GetActorSaveID_Implementation();
 	FSaveActorData GetSaveData_Implementation();
+	void SetActorGUID_Implementation(const FGuid& NewGuid);
 
 
 };
