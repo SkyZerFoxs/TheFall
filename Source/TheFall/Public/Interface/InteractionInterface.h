@@ -22,4 +22,15 @@ class THEFALL_API IInteractionInterface
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
+	UFUNCTION(BlueprintNativeEvent)
+	FText GetInteractionText();
+	FText GetInteractionText_Implementation();
+
+	UFUNCTION(BlueprintNativeEvent)
+	void Interact(class ATFCharacter* Caller);
+	void Interact_Implementation(class ATFCharacter* Caller);
+	UFUNCTION(BlueprintNativeEvent)
+	bool IsInteractable() const;
+	bool IsInteractable_Implementation() const;
+
 };
