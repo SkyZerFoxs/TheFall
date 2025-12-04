@@ -13,6 +13,7 @@
 #include "InputActionValue.h"
 #include "Components/SphereComponent.h"
 #include "Interface/InteractionInterface.h"
+#include "Logger.h"
 
 void ATFPlayerCharacter::TraceForInteraction()
 {
@@ -25,7 +26,17 @@ void ATFPlayerCharacter::TraceForInteraction()
 	float SearchLength = (FollowCamera->GetComponentLocation() - CameraBoom->GetComponentLocation()).Length();
 	SearchLength += InteractionTraceLength;
 	FVector LTEnd = (FollowCamera->GetForwardVector() * SearchLength) + LTStart;
+
 	GetWorld()->LineTraceSingleByChannel(LTHit, LTStart, LTEnd, ECC_Visibility, LTParams);
+
+	if (!LTHit.bBlockingHit || LTHit.GetActor()->Implements<UInteractionInterface>())
+	{
+		InteractionActor = nullptr;
+		return;
+	}
+	
+	InteractionActor = LTHit.GetActor();
+
 }
 
 
@@ -138,6 +149,24 @@ void ATFPlayerCharacter::SneakOff()
 	SetSneaking(false);
 }
 
+void ATFPlayerCharacter::OnInteract()
+{
+	if (InteractionActor == nullptr)
+	{
+		return;
+	}
+
+	IInteractionInterface* Inter = Cast<IInteractionInterface>(InteractionActor);
+	if (Inter == nullptr)
+	{
+		Logger::GetInstance()->AddMessage("ATFPlayerCharacter::OnInteract - Failed to cast to interazctionInterface", ERRORLEVEL::EL_ERROR);
+
+		return;
+	}
+	Inter->Interact_Implementation(this);
+
+}
+
 void ATFPlayerCharacter::SprintOff()
 {
 	SetSprinting(false);
@@ -176,6 +205,8 @@ void ATFPlayerCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		EnhancedInputComponent->BindAction(SneakAction, ETriggerEvent::Started, this, &ATFPlayerCharacter::SneakOn);
 
 		EnhancedInputComponent->BindAction(SneakAction, ETriggerEvent::Completed, this, &ATFPlayerCharacter::SneakOff);
+
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Completed, this, &ATFPlayerCharacter::OnInteract);
 	}
 
 
@@ -211,4 +242,9 @@ void ATFPlayerCharacter::OnInteractionTriggerOverlapEnd(UPrimitiveComponent* Ove
 	}
 	InteractableActors.Remove(OtherActor);
 	bEnableRayTrace = InteractableActors.Num() > 0;
+}
+
+void ATFPlayerCharacter::UpdateInteractionText_Implementation()
+{
+	UpdateInteractionText();
 }
